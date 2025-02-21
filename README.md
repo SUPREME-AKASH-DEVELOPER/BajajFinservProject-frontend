@@ -21,8 +21,8 @@ A sleek, modern web app that processes JSON input and filters response data base
 ## **Setup & Deployment**  
 1. Clone this repository:  
    ```sh
-   git clone https://github.com/yourusername/BFHL-Data-Processor.git
-   cd BFHL-Data-Processor
+   git https://github.com/SUPREME-AKASH-DEVELOPER/BajajFinservProject-frontend.git
+   cd BajajFinservProject
    ```
 2. Open `index.html` in a browser.  
 
