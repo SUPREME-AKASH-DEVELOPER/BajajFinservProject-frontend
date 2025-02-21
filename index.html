@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BFHL Data Processor</title> 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        async function processRequest() {
+            let inputData = document.getElementById("jsonInput").value;
+            let responseContainer = document.getElementById("response");
+            let dropdown = document.getElementById("filterOptions");
+
+            try {
+                let jsonData = JSON.parse(inputData);
+
+                let response = await fetch("https://your-backend-url.com/bfhl", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(jsonData),
+                });
+
+                let result = await response.json();
+
+                let selectedOptions = Array.from(dropdown.selectedOptions).map(option => option.value);
+                let displayData = {};
+
+                if (selectedOptions.includes("Alphabets")) {
+                    displayData.alphabets = result.alphabets || [];
+                }
+                if (selectedOptions.includes("Numbers")) {
+                    displayData.numbers = result.numbers || [];
+                }
+                if (selectedOptions.includes("Highest Alphabet")) {
+                    displayData.highest_alphabet = result.highest_alphabet || [];
+                }
+
+                responseContainer.innerHTML = `
+                    <div class="p-4 bg-gray-100 rounded-lg mt-4">
+                        <pre class="text-sm text-gray-800">${JSON.stringify(displayData, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                responseContainer.innerHTML = `<p class="text-red-500 mt-2">Invalid JSON format or API error.</p>`;
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg">
+        <h1 class="text-2xl font-semibold text-center text-gray-800">BFHL Data Processor</h1>
+
+        <label for="jsonInput" class="block mt-4 text-gray-700 font-medium">Enter JSON Input:</label>
+        <textarea id="jsonInput" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" rows="4">{
+    "data": ["A", "C", "z"]
+}</textarea>
+
+        <button onclick="processRequest()" class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+            Submit
+        </button>
+
+        <label for="filterOptions" class="block mt-4 text-gray-700 font-medium">Filter Response:</label>
+        <select id="filterOptions" multiple class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <option value="Alphabets">Alphabets</option>
+            <option value="Numbers">Numbers</option>
+            <option value="Highest Alphabet">Highest Alphabet</option>
+        </select>
+
+        <h2 class="text-lg font-medium text-gray-800 mt-6">Response:</h2>
+        <div id="response"></div>
+    </div>
+</body>
+</html>
